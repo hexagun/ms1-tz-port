@@ -1,0 +1,27 @@
+input:
+  easy-installer:
+    local: torizon-core-docker-apalis-imx8-Tezi_5.4.0+build.10.tar
+
+customization:
+  splash-screen: 108941-splash.png
+  device-tree:
+    include-dirs:
+      - device-trees/include/
+    custom: device-trees/dts-arm64/imx8qm-apalis-v1.1-ixora-v1.2.dts
+    overlays:
+      add:
+        - device-trees/overlays/apalis-imx8_hdmi_overlay.dts
+        - device-trees/overlays/apalis-imx8_ar0521_overlay.dts
+
+output:
+  # >> OSTree deployment configuration (relevant also for Easy Installer output).
+  # ostree:
+    # branch: my-dev-branch
+    # commit-subject: "OSTree commit subject"
+    # commit-body: "OSTree commit body"
+  easy-installer:
+    local: milestone1-image.CUSTOM
+    name: "Milestone1 Torizoncore Image"
+    description: "Porting Yocto build to Torizoncore"
+    bundle:
+      dir: bundle/

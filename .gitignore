@@ -1,0 +1,6 @@
+tcb_ws/bundle/
+tcb_ws/device-trees
+tcb_ws/milestone1-image.CUSTOM
+tcb_ws/tcb-env-setup.sh
+tcb_ws/torizon-core*
+
