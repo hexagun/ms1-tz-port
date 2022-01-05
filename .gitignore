@@ -4,3 +4,5 @@ tcb_ws/milestone1-image.CUSTOM
 tcb_ws/tcb-env-setup.sh
 tcb_ws/torizon-core*
 
+docker-images/motion-app/app/motion-venv
+
