@@ -12,6 +12,7 @@ customization:
       add:
         - device-trees/overlays/apalis-imx8_hdmi_overlay.dts
         - device-trees/overlays/apalis-imx8_ar0521_overlay.dts
+        - device-trees/overlays/custom_apalis-imx8_tempsensor.dts
 
 output:
   # >> OSTree deployment configuration (relevant also for Easy Installer output).
