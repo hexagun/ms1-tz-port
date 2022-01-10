@@ -4,43 +4,40 @@ ENV TZ=Asia/Kolkata
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get update && apt install nano -y
-
-RUN apt-get install -y v4l-utils
-
-RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
-    libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-tools 
+RUN apt-get update
 
 WORKDIR /
 
-RUN apt install -y \
-    build-essential \
-    cmake \
-    git \
-    libgtk2.0-dev \
-    pkg-config 
-    
+# Install v4l2
+RUN apt install -y v4l-utils
+
+# Install Gstreamer
+RUN apt install -y libgstreamer1.0-dev
+RUN apt install -y libgstreamer-plugins-base1.0-dev
+RUN apt install -y libgstreamer-plugins-bad1.0-dev
+RUN apt install -y gstreamer1.0-plugins-base
+RUN apt install -y gstreamer1.0-plugins-good
+RUN apt install -y gstreamer1.0-plugins-bad
+RUN apt install -y gstreamer1.0-plugins-ugly
+RUN apt install -y gstreamer1.0-tools
+
+# Install CV2
+RUN apt install -y nano
+RUN apt install -y build-essential
+RUN apt install -y cmake
+RUN apt install -y git
+RUN apt install -y libgtk2.0-dev
+RUN apt install -y pkg-config 
 RUN apt install -y libavcodec-dev 
-
 RUN apt install -y libavformat-dev 
-
 RUN apt install -y libswscale-dev
-
 RUN apt install -y python-dev 
-
 RUN apt install -y python-numpy 
-
 RUN apt install -y python3 
-
 RUN apt install -y python3-pip 
-
 RUN apt install -y wget 
-
-RUN apt install python3.8-dev
-
-RUN apt install python3-dev
-
+RUN apt install -y python3.8-dev
+RUN apt install -y python3-dev
 RUN pip install numpy
 
 RUN mkdir ws 
@@ -63,11 +60,7 @@ RUN mkdir build && cd build && \
 
 WORKDIR /ws/opencv/build 
 
-RUN pwd
-
-RUN make -j6
-
-RUN make install
+RUN make -j6 && make install
 
 RUN ldconfig 
 
