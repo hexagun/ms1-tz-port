@@ -30,8 +30,8 @@ RUN apt install -y pkg-config
 RUN apt install -y libavcodec-dev 
 RUN apt install -y libavformat-dev 
 RUN apt install -y libswscale-dev
-RUN apt install -y python-dev 
-RUN apt install -y python-numpy 
+# RUN apt install -y python-dev 
+# RUN apt install -y python-numpy 
 RUN apt install -y python3 
 RUN apt install -y python3-pip 
 RUN apt install -y wget 
@@ -47,10 +47,15 @@ RUN git clone https://github.com/opencv/opencv.git
 
 WORKDIR /ws/opencv
 
+RUN python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())" 
+RUN python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+RUN python3 -c "import numpy as np;print(np.get_include())"
+
+
 RUN mkdir build && cd build && \
     cmake -DBUILD_PYTHON3=ON \
     -DWITH_GSTREAMER=ON \
-    -DPYTHON3_EXECUTABLE=/usr/bin/python3.8 \
+    -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
     -DPYTHON3_INCLUDE_DIR=/usr/include/python3.8/ \
     -DBUILD_NEW_PYTHON_SUPPORT=ON \
     -DBUILD_opencv_python3=ON \
@@ -60,6 +65,8 @@ RUN mkdir build && cd build && \
     -DBUILD_PYTHON3=ON \
     -DBUILD_OPENCV_PYTHON2=OFF \
     -DBUILD_SHARED_LIBS=ON \
+    -DPYTHON3_LIBRARIES=/usr/lib/python3/dist-packages \
+    -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
     ..
 
 
@@ -71,7 +78,7 @@ WORKDIR /ws
 
 RUN mkdir images
 
-WORKDIR /usr/local/lib/python3.8/site-packages/cv2/python-3.8/
+# WORKDIR /usr/local/lib/python3.8/site-packages/cv2/python-3.8/
 
 RUN wget https://raw.githubusercontent.com/hexagun/DEV/main/testcam/testcam.py
 
@@ -81,4 +88,4 @@ RUN ls -la
 
 RUN python3 testcam.py &
 
-# lib/python3.8/site-packages/cv2/python3.8/ 
+# docker build --platform linux/arm64 -t  hexagun/motionapp:test .
