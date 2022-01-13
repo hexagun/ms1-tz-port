@@ -54,7 +54,7 @@ while (True):
         cv2.rectangle(frame11, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.putText(frame11, "Status: {}".format('Insect captured'), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
         t = time.localtime()
-        path = '/PY_WS/images/' # path where images will be stored
+        path = '/ws/images/' # path where images will be stored
         #num = random.random()
         filename = path + str(t[0]) + str(t[1]) + str(t[2]) + "_" + str(t[3]) + str(t[4]) + str(t[5]) + str(num) + ".jpg"
         cv2.imwrite(filename, frame11, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
