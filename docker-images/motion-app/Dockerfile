@@ -66,7 +66,9 @@ RUN mkdir build && cd build && \
     -DBUILD_OPENCV_PYTHON2=OFF \
     -DBUILD_SHARED_LIBS=ON \
     -DPYTHON3_LIBRARIES=/usr/lib/python3/dist-packages \
-    -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
+    -DPYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
+    -DWITH_FFMPEG=OFF \
+    -DWITH_V4L=ON \
     ..
 
 
@@ -86,6 +88,6 @@ RUN pwd
 
 RUN ls -la
 
-RUN python3 testcam.py &
+RUN python3 testcam.py 
 
 # docker build --platform linux/arm64 -t  hexagun/motionapp:test .
