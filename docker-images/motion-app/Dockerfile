@@ -11,49 +11,67 @@ WORKDIR /
 # Install v4l2
 RUN apt install -y v4l-utils
 
+
+
+# Install CV2
+# RUN apt install -y build-essential
+RUN apt install -y cmake
+RUN apt install -y git
+# RUN apt install -y libgtk2.0-dev
+RUN apt install -y pkg-config 
+RUN apt install -y libavcodec-dev 
+RUN apt install -y libavformat-dev 
+RUN apt install -y libswscale-dev
+# RUN apt install -y python-dev 
+RUN apt install -y python3-numpy 
+# RUN apt install -y python3 
+# RUN apt install -y python3-pip 
+RUN apt install -y wget 
+# RUN apt install -y python3.8-dev
+RUN apt install -y python3-dev
+# RUN pip3 install numpy
+RUN apt autoremove -y python2
+RUN mkdir ws 
+
+WORKDIR /ws
+
+RUN wget https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz
+
+RUN tar -xf 4.5.5.tar.gz
+
+RUN mv opencv-4.5.5 opencv
+# RUN git clone https://github.com/opencv/opencv.git
+
 # Install Gstreamer
 RUN apt install -y libgstreamer1.0-dev
-RUN apt install -y libgstreamer-plugins-base1.0-dev
-RUN apt install -y libgstreamer-plugins-bad1.0-dev
+# RUN apt install -y libgstreamer-plugins-base1.0-dev
+# RUN apt install -y libgstreamer-plugins-bad1.0-dev
 RUN apt install -y gstreamer1.0-plugins-base
 RUN apt install -y gstreamer1.0-plugins-good
 RUN apt install -y gstreamer1.0-plugins-bad
 RUN apt install -y gstreamer1.0-plugins-ugly
 RUN apt install -y gstreamer1.0-tools
 
-# Install CV2
-RUN apt install -y build-essential
-RUN apt install -y cmake
-RUN apt install -y git
-RUN apt install -y libgtk2.0-dev
-RUN apt install -y pkg-config 
-RUN apt install -y libavcodec-dev 
-RUN apt install -y libavformat-dev 
-RUN apt install -y libswscale-dev
-# RUN apt install -y python-dev 
-# RUN apt install -y python-numpy 
-RUN apt install -y python3 
-RUN apt install -y python3-pip 
-RUN apt install -y wget 
-RUN apt install -y python3.8-dev
-RUN apt install -y python3-dev
-RUN pip3 install numpy
-RUN apt autoremove -y python2
-RUN mkdir ws 
-
-WORKDIR /ws
-
-RUN git clone https://github.com/opencv/opencv.git
-
 WORKDIR /ws/opencv
 
-RUN python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())" 
-RUN python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
-RUN python3 -c "import numpy as np;print(np.get_include())"
+# RUN python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())" 
+# RUN python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+# RUN python3 -c "import numpy as np;print(np.get_include())"
 
 
 RUN mkdir build && cd build && \
     cmake -DBUILD_PYTHON3=ON \
+    -DBUILD_JAVA=OFF \
+    -DWITH_LAPACK=OFF \
+    -DWITH_MATLAB=OFF \
+    -DWITH_GTK=OFF \
+    -DWITH_GPHOTO2=OFF \
+    -DWITH_CUBLASS=OFF \
+    -DWITH_CUDA=OFF \
+    -DWITH_EIGEN=OFFF \
+    -DWITH_VTK=OFF \
+    -DWITH_JASPER=OFF \
+    -DWITH_WEBP=OFF \
     -DWITH_GSTREAMER=ON \
     -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
     -DPYTHON3_INCLUDE_DIR=/usr/include/python3.8/ \
@@ -66,7 +84,9 @@ RUN mkdir build && cd build && \
     -DBUILD_OPENCV_PYTHON2=OFF \
     -DBUILD_SHARED_LIBS=ON \
     -DPYTHON3_LIBRARIES=/usr/lib/python3/dist-packages \
-    -DPYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
+    -DOPENCV_GENERATE_PKGCONFIG=ON \
+    # -DPYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
+    -DPYTHON3_NUMPY_INCLUDE_DIRS=$(python3 -c "import numpy as np;print(np.get_include())") \
     -DWITH_FFMPEG=OFF \
     -DWITH_V4L=ON \
     ..
@@ -75,6 +95,8 @@ RUN mkdir build && cd build && \
 WORKDIR /ws/opencv/build 
 
 RUN make -j6 && make install && ldconfig 
+
+RUN pkg-config --modversion opencv4
 
 WORKDIR /ws
 
@@ -88,6 +110,6 @@ RUN pwd
 
 RUN ls -la
 
-RUN python3 testcam.py 
+RUN export PYTHONPATH=/usr/local/lib/python3.8/site-packages/cv2/python-3.8:$PYTHONPATH && python3 testcam.py &
 
 # docker build --platform linux/arm64 -t  hexagun/motionapp:test .
