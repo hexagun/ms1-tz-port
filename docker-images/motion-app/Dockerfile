@@ -11,22 +11,9 @@ WORKDIR /
 # Install v4l2
 RUN apt install -y v4l-utils
 
-# Install CV2
-RUN apt install -y cmake
-RUN apt install -y git
-# RUN apt install -y libgtk2.0-dev
-RUN apt install -y pkg-config 
-RUN apt install -y libavcodec-dev 
-RUN apt install -y libavformat-dev 
-RUN apt install -y libswscale-dev
-# RUN apt install -y python-dev 
-RUN apt install -y python3-numpy 
-# RUN apt install -y python3 
-# RUN apt install -y python3-pip 
-RUN apt install -y wget 
-# RUN apt install -y python3.8-dev
-RUN apt install -y python3-dev
-# RUN pip3 install numpy
+# Install CV2 depenedencies
+RUN apt install -y cmake git pkg-config libavcodec-dev libavformat-dev libswscale-dev wget
+RUN apt install -y python3-dev python3-numpy 
 RUN apt autoremove -y python2
 
 RUN mkdir motionapp 
@@ -38,7 +25,6 @@ RUN wget https://github.com/opencv/opencv/archive/refs/tags/4.5.5.tar.gz
 RUN tar -xf 4.5.5.tar.gz
 
 RUN mv opencv-4.5.5 opencv
-# RUN git clone https://github.com/opencv/opencv.git
 
 # Install Gstreamer
 RUN apt install -y libgstreamer1.0-dev
@@ -51,11 +37,6 @@ RUN apt install -y gstreamer1.0-plugins-ugly
 RUN apt install -y gstreamer1.0-tools
 
 WORKDIR /motionapp/opencv
-
-# RUN python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())" 
-# RUN python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
-# RUN python3 -c "import numpy as np;print(np.get_include())"
-
 
 RUN mkdir build && cd build && \
     cmake \
@@ -122,57 +103,23 @@ RUN mkdir build && cd build && \
     -DWITH_FFMPEG=OFF \
     ..
 
-    # -DBUILD_PYTHON3=ON \
-    # -DWITH_GSTREAMER=ON \
-    # -DBUILD_JAVA=OFF \
-    # -DWITH_LAPACK=OFF \
-    # -DWITH_MATLAB=OFF \
-    # -DWITH_GTK=OFF \
-    # -DWITH_GPHOTO2=OFF \
-    # -DWITH_CUBLASS=OFF \
-    # -DWITH_CUDA=OFF \
-    # -DWITH_EIGEN=OFFF \
-    # -DWITH_VTK=OFF \
-    # -DWITH_JASPER=OFF \
-    # -DWITH_WEBP=OFF \
-    # -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
-    # -DPYTHON3_INCLUDE_DIR=/usr/include/python3.8/ \
-    # -DBUILD_NEW_PYTHON_SUPPORT=ON \
-    # -DBUILD_opencv_python3=ON \
-    # -DHAVE_opencv_python3=ON \
-    # -DPYTHON3_DEFAULT_EXECUTABLE=/usr/bin/python3 \
-    # -DPYTHON3_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.8.so \
-    # -DBUILD_PYTHON3=ON \
-    # -DBUILD_OPENCV_PYTHON2=OFF \
-    # -DBUILD_SHARED_LIBS=ON \
-    # -DPYTHON3_LIBRARIES=/usr/lib/python3/dist-packages \
-    # -DOPENCV_GENERATE_PKGCONFIG=ON \
-    # # -DPYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
-    # -DPYTHON3_NUMPY_INCLUDE_DIRS=$(python3 -c "import numpy as np;print(np.get_include())") \
-    # -DWITH_FFMPEG=OFF \
-    # -DWITH_V4L=ON \
-    # ..
-
-
 WORKDIR /motionapp/opencv/build 
 
 RUN make -j6 && make install && ldconfig 
-
-RUN pkg-config --modversion opencv4
 
 WORKDIR /motionapp
 
 # WORKDIR /usr/local/lib/python3.8/dist-packages/
 
-CMD [ "sh", "-c", "wget https://raw.githubusercontent.com/hexagun/DEV/main/testcam/testcam.py && \
-    python3 testcam.py" ]
+CMD [ "sh", "-c", \
+    "wget https://raw.githubusercontent.com/hexagun/ms1-tz-port/minimal/docker-images/motion-app/app/testcam.py \
+    && python3 testcam.py" ]
 
 # RUN export PYTHONPATH=/usr/local/lib/python3.8/site-packages/cv2/python-3.8:$PYTHONPATH && \
 # RUN python3 -c "import cv2; print(cv2.getBuildInformation())" 
 
-# CMD [ "python3", "testcam.py" ]
-
 # docker build --platform linux/arm64 -t  hexagun/motionapp:test .
 
-# cmake -DWITH_GSTREAMER=ON -DBUILD_PYTON3=ON -DPYTHON3_EXECUTABLE=/usr/bin/python3 -DPYTHON3_INCLUDE_DIR=/usr/include/python3.8 -DPYTHON3_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.8.so -DPYTHON3_PACKAGES_PATH=/usr/local/lib/python3.8/dist-packages/ -DWITH_GTK=OFF -DWITH_FFMPEG=OFF _DWITH_VULKAN=OFF -DWITH_OPENGL=OFF ..
-
+# RUN python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())" 
+# RUN python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+# RUN python3 -c "import numpy as np;print(np.get_include())"
