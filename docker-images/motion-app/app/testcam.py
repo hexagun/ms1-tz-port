@@ -6,6 +6,7 @@ import numpy as np
 from datetime import datetime
 import time
 import random
+import sys
 
 #DEFAULT_CAMERA_NAME = '/dev/v4l/by-path/platform-video-index0'
 
@@ -54,17 +55,17 @@ while (True):
         cv2.rectangle(frame11, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.putText(frame11, "Status: {}".format('Insect captured'), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
         t = time.localtime()
-        path = '/ws/images/' # path where images will be stored
+        path = '~/images/' # path where images will be stored
         #num = random.random()
         filename = path + str(t[0]) + str(t[1]) + str(t[2]) + "_" + str(t[3]) + str(t[4]) + str(t[5]) + str(num) + ".jpg"
         cv2.imwrite(filename, frame11, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-        print('Image being capture...', filename)
+        print('Image being capture...', filename, file=sys.stdout)
         num+=1
     # cv2.line(frame, (0, 300), (200, 200), (0, 255, 0), 5)
     resizedframe11 = rescale_frame(frame11, percent=75)
     #cv2.imshow('Ready to capture', resizedframe11)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if 0xFF == ord('q'):
         break
 cap.release()
 cv2.destroyAllWindows()
