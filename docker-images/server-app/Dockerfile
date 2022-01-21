@@ -4,6 +4,6 @@ RUN apt update
 
 RUN apt install -y python3 python3-dev
 
-WORKDIR /ws-motionapp
+WORKDIR /ws_motionapp
 
 CMD [ "python3", "-m", "http.server", "7000" ]
