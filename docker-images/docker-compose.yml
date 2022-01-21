@@ -3,9 +3,9 @@ version: "3.8"
 services:
   motionapp-dc:
     image: hexagun/motionapp:minimal
-    working_dir: /usr/local/lib/python3.8/site-packages/cv2/python-3.8
+    working_dir: ~/images
     volumes:
-      - /ws_motionapp:/ws_motionapp
+      - ~/images:~/images
     devices:
       - "/dev/video0:/dev/video0"
       - "/dev/video1:/dev/video1"
@@ -16,9 +16,13 @@ services:
   
   server-dc:
     image: hexagun/py-server:main
-    command: sh -c "python3 -m http.server 7000"
+    working_dir: ~/images
     ports:
       - 7000:7000
     volumes:
-      - /ws_motionapp:/ws_motionapp
+      - ~/images:~/images
+    restart: unless-stopped
     
+
+
+# /usr/local/lib/python3.8/site-packages/cv2/python-3.8
