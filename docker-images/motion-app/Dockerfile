@@ -164,8 +164,8 @@ WORKDIR /motionapp
 
 # WORKDIR /usr/local/lib/python3.8/dist-packages/
 
-CMD [ "wget", "https://raw.githubusercontent.com/hexagun/DEV/main/testcam/testcam.py", "&&",  \
-    "ls", "&&", "python3", "testcam.py" ]
+CMD [ "sh", "-c", "wget https://raw.githubusercontent.com/hexagun/DEV/main/testcam/testcam.py && \
+    python3 testcam.py" ]
 
 # RUN export PYTHONPATH=/usr/local/lib/python3.8/site-packages/cv2/python-3.8:$PYTHONPATH && \
 # RUN python3 -c "import cv2; print(cv2.getBuildInformation())" 
